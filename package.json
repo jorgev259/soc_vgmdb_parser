@@ -1,0 +1,10 @@
+{
+  "name": "@soc/vgmdb_parser",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "~20",
+    "prettier-standard": "^16.4.1",
+    "typescript": "~5.3"
+  }
+}
