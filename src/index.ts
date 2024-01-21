@@ -150,6 +150,43 @@ function getCategories($) {
   return result
 }
 
+const monthLabels = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'may',
+  'jun',
+  'jul',
+  'aug',
+  'sept',
+  'oct',
+  'nov',
+  'dec'
+]
+
+function getReleaseDate(releaseDateString) {
+  try {
+    if (!releaseDateString) return null
+
+    const [monthString, day, year] = releaseDateString
+      .split(/[, ]/g)
+      .filter(c => c.length > 1)
+
+    if (!monthString || !day || !year) return null
+
+    const monthIndex = monthLabels.findIndex(m =>
+      monthString.toLowerCase().includes(m)
+    )
+    if (monthIndex === -1) return null
+
+    const month = monthIndex + 1
+    return `${day}-${month}-${year}`
+  } catch (err) {
+    return null
+  }
+}
+
 export default async function getVGMDB(url: string) {
   const { data } = await axios.get(url, {
     headers: { 'Content-Type': 'text/html' }
@@ -164,9 +201,12 @@ export default async function getVGMDB(url: string) {
   )
 
   const tableInfo = <{ [key: string]: string }>getTableInfo($)
-  const { 'Release Date': releaseDate, Classification: classString = '' } =
-    tableInfo
+  const {
+    'Release Date': releaseDateString,
+    Classification: classString = ''
+  } = tableInfo
 
+  const releaseDate = getReleaseDate(releaseDateString)
   const tracklist = getTracklist($)
   const artists = getArtists($)
   const categories = getCategories($)
