@@ -165,6 +165,13 @@ const monthLabels = [
   'dec'
 ]
 
+function formatDigits(value: string | number, digits: number = 2): string {
+  return value.toLocaleString('en-US', {
+    minimumIntegerDigits: digits,
+    useGrouping: false
+  })
+}
+
 function getReleaseDate(releaseDateString) {
   try {
     if (!releaseDateString) return null
@@ -180,8 +187,8 @@ function getReleaseDate(releaseDateString) {
     )
     if (monthIndex === -1) return null
 
-    const month = monthIndex + 1
-    return `${day}-${month}-${year}`
+    const month = formatDigits(monthIndex + 1, 2)
+    return `${formatDigits(year, 4)}-${month}-${formatDigits(day, 2)}`
   } catch (err) {
     return null
   }
