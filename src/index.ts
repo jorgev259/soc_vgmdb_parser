@@ -195,44 +195,49 @@ function getReleaseDate(releaseDateString) {
 }
 
 export default async function getVGMDB(url: string) {
-  const { data } = await axios.get(url, {
-    headers: { 'Content-Type': 'text/html' }
-  })
-  const $ = load(data)
+  try{
+    const { data } = await axios.get(url, {
+      headers: { 'Content-Type': 'text/html' }
+    })
+    const $ = load(data)
 
-  const title = getTitle(
-    $('#innermain > h1:has(.albumtitle) span[style*="display:inline"]')
-  )
-  const subTitle = getTitle(
-    $('#innermain > div:has(.albumtitle) span[style*="display:inline"]')
-  )
+    const title = getTitle(
+      $('#innermain > h1:has(.albumtitle) span[style*="display:inline"]')
+    )
+    const subTitle = getTitle(
+      $('#innermain > div:has(.albumtitle) span[style*="display:inline"]')
+    )
 
-  const tableInfo = <{ [key: string]: string }>getTableInfo($)
-  const {
-    'Release Date': releaseDateString,
-    Classification: classString = ''
-  } = tableInfo
+    const tableInfo = <{ [key: string]: string }>getTableInfo($)
+    const {
+      'Release Date': releaseDateString,
+      Classification: classString = ''
+    } = tableInfo
 
-  const releaseDate = getReleaseDate(releaseDateString)
-  const tracklist = getTracklist($)
-  const artists = getArtists($)
-  const categories = getCategories($)
-  const classifications = classString.split(/[,/]/).map(c => c.trim()) ?? []
-  const coverUrl =
-    $('#coverart')[0]
-      .attribs.style.replace("background-image: url('", '')
-      .replaceAll(/[('"())]/g, '') ?? null
+    const releaseDate = getReleaseDate(releaseDateString)
+    const tracklist = getTracklist($)
+    const artists = getArtists($)
+    const categories = getCategories($)
+    const classifications = classString.split(/[,/]/).map(c => c.trim()) ?? []
+    const coverUrl =
+      $('#coverart')[0]
+        .attribs.style.replace("background-image: url('", '')
+        .replaceAll(/[('"())]/g, '') ?? null
 
-  const album: Album = {
-    title,
-    subTitle,
-    releaseDate,
-    tracklist,
-    artists,
-    categories,
-    classifications,
-    coverUrl
+    const album: Album = {
+      title,
+      subTitle,
+      releaseDate,
+      tracklist,
+      artists,
+      categories,
+      classifications,
+      coverUrl
+    }
+
+    return album
+  }catch(err){
+    console.error(err)
+    return null
   }
-
-  return album
 }
