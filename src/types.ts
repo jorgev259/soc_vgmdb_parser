@@ -1,15 +1,15 @@
 export interface Disc {
-  number: number
-  body: string
+  number: number;
+  body: string;
 }
 
-export interface Album {
-  title: string | null
-  subTitle: string | null
-  releaseDate: string | null
-  tracklist: Disc[]
-  artists: String[]
-  categories: String[]
-  classifications: String[]
-  coverUrl?: string
+export interface VGMDBAlbum {
+  title: string | null;
+  subTitle: string | null;
+  releaseDate: string | null;
+  tracklist: Disc[];
+  artists: String[];
+  categories: String[];
+  classifications: String[];
+  coverUrl?: string;
 }
