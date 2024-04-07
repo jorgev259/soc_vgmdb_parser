@@ -144,10 +144,7 @@ export default async function getPuppeteer(
   url: string
 ): Promise<VGMDBResponse | null> {
   try {
-    if (!browser)
-      browser = await puppeteer.launch({
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
+    if (!browser) browser = await puppeteer.launch({ headless: true });
 
     const page = await browser.newPage();
     await page.goto(url);
