@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load, CheerioAPI, text } from "cheerio";
 
-import { DiscResponse } from "@/types";
+import { DiscResponse, VGMDBResponse } from "@/types";
 import {
   albumCoverSelector,
   albumInfoSelector,
@@ -113,7 +113,7 @@ function getTracklist($: CheerioAPI) {
 }
 
 function getArtists($: CheerioAPI) {
-  const artists = new Set();
+  const artists = new Set<string>();
 
   try {
     $('.maincred .artistname[style*="display:inline"]').each((_, labelEl) => {
@@ -161,34 +161,41 @@ function getCategories($: CheerioAPI) {
   return result;
 }
 
-export default async function getCheerio(url: string) {
-  const { data } = await axios.get(url, {
-    headers: { "Content-Type": "text/html" },
-  });
-  const $ = load(data);
+export default async function getCheerio(
+  url: string
+): Promise<VGMDBResponse | null> {
+  try {
+    const { data } = await axios.get(url, {
+      headers: { "Content-Type": "text/html" },
+    });
+    const $ = load(data);
 
-  const title = $(titleSelector).text();
-  const subTitle = $(subTitleSelector).text();
+    const title = $(titleSelector).text();
+    const subTitle = $(subTitleSelector).text();
 
-  const info = getTableInfo($);
+    const info = getTableInfo($);
 
-  const tracklist = getTracklist($);
-  const artists = getArtists($);
-  const categories = getCategories($);
-  const coverUrl =
-    $(albumCoverSelector)[0]
-      .attribs.style.replace("background-image: url('", "")
-      .replaceAll(/[('"())]/g, "") ?? null;
+    const tracklist = getTracklist($);
+    const artists = getArtists($);
+    const categories = getCategories($);
+    const coverUrl =
+      $(albumCoverSelector)[0]
+        .attribs.style.replace("background-image: url('", "")
+        .replaceAll(/[('"())]/g, "") ?? null;
 
-  const album = {
-    ...info,
-    title,
-    subTitle,
-    tracklist,
-    artists,
-    categories,
-    coverUrl,
-  };
+    const album = {
+      ...info,
+      title,
+      subTitle,
+      tracklist,
+      artists,
+      categories,
+      coverUrl,
+    };
 
-  return album;
+    return album;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }

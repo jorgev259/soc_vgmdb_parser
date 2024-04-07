@@ -142,22 +142,35 @@ async function getCoverUrl(page: Page) {
 
 export default async function getPuppeteer(
   url: string
-): Promise<VGMDBResponse> {
-  if (!browser) browser = await puppeteer.launch();
+): Promise<VGMDBResponse | null> {
+  try {
+    if (!browser) browser = await puppeteer.launch();
 
-  const page = await browser.newPage();
-  await page.goto(url);
+    const page = await browser.newPage();
+    await page.goto(url);
 
-  const [title, subTitle, info, trackList, artists, categories, coverUrl] =
-    await Promise.all([
-      await getTextFromSelector(page, titleSelector),
-      await getTextFromSelector(page, subTitleSelector),
-      await getAlbumInfo(page),
-      await getTrackList(page),
-      await getArtists(page),
-      await getCategories(page),
-      await getCoverUrl(page),
-    ]);
+    const [title, subTitle, info, trackList, artists, categories, coverUrl] =
+      await Promise.all([
+        await getTextFromSelector(page, titleSelector),
+        await getTextFromSelector(page, subTitleSelector),
+        await getAlbumInfo(page),
+        await getTrackList(page),
+        await getArtists(page),
+        await getCategories(page),
+        await getCoverUrl(page),
+      ]);
 
-  return { ...info, title, subTitle, trackList, artists, categories, coverUrl };
+    return {
+      ...info,
+      title,
+      subTitle,
+      trackList,
+      artists,
+      categories,
+      coverUrl,
+    };
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }
