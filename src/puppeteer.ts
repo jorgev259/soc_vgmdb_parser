@@ -12,8 +12,8 @@ import {
   titleSelector,
   trackItemSelector,
   trackTableSelector,
-} from "@/utils";
-import { DiscResponse, TableHandle, VGMDBResponse } from "@/types";
+} from "./utils";
+import { DiscResponse, TableHandle, VGMDBResponse } from "./types";
 
 let browser: Browser;
 

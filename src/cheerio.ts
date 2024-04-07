@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load, CheerioAPI, text } from "cheerio";
 
-import { DiscResponse, VGMDBResponse } from "@/types";
+import { DiscResponse, VGMDBResponse } from "./types";
 import {
   albumCoverSelector,
   albumInfoSelector,
@@ -12,7 +12,7 @@ import {
   subTitleSelector,
   titleSelector,
   trackTableSelector,
-} from "@/utils";
+} from "./utils";
 
 function getTableInfo($: CheerioAPI) {
   const table = $(albumInfoSelector)[0];
