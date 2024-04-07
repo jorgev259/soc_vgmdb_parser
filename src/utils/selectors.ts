@@ -1,0 +1,9 @@
+export const titleSelector =
+  '#innermain > h1:has(.albumtitle) span[style*="display:inline"]';
+export const subTitleSelector =
+  '#innermain > div:has(.albumtitle) span[style*="display:inline"]';
+export const albumInfoSelector = "#album_infobit_large";
+export const trackTableSelector = "#tracklist table";
+export const trackItemSelector = "#maincred";
+export const albumStatsSelector = "#rightcolumn .label";
+export const albumCoverSelector = "#coverart";
